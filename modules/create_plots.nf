@@ -20,7 +20,7 @@ process processCSV {
     do
         # get the second column for the first occurence of the plotID
         coord=\$(awk -F ";" -v plotID="\$plotID" 'NR>1 && \$1==plotID {print \$2; exit}' ${plots_config})
-        awk -F ";" -v plotID="\$plotID" 'BEGIN {OFS="\\t"} NR>1 && \$1==plotID {print \$3, \$3".bam", \$4}' ${plots_config} > \$coord.tsv
+        awk -F ";" -v plotID="\$plotID" 'BEGIN {OFS="\\t"} NR>1 && \$1==plotID {print \$3, \$3".bam", \$4}' ${plots_config} > \$plotID.tsv
     done
     """
 }
