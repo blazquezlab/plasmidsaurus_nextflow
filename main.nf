@@ -45,10 +45,9 @@ workflow {
     align.out | collect \
     | set { all_bams }
     
-    processCSV(plots_csv) | flatten \
-    | set { bam_tsvs }
+    processCSV(plots_csv)
 
-    sashimi(all_bams, gtf, sashimi_palette, bam_tsvs)
+    sashimi(all_bams, gtf, sashimi_palette, processCSV.sashimi_inputs)
 
     // ---- Collect reports ----
     multiqc(
