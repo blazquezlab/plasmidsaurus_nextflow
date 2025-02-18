@@ -1,5 +1,4 @@
 
-
 process processCSV {
     input:
         path plots_config
@@ -20,7 +19,8 @@ process processCSV {
     do
         # get the second column for the first occurence of the plotID
         coord=\$(awk -F ";" -v plotID="\$plotID" 'NR>1 && \$1==plotID {print \$2; exit}' ${plots_config})
-        awk -F ";" -v plotID="\$plotID" 'BEGIN {OFS="\\t"} NR>1 && \$1==plotID {print \$3, \$3".bam", \$4}' ${plots_config} > \$plotID.tsv
+        safe_coord=\$(echo "\$coord" | sed 's/[:]/_/g')
+        awk -F ";" -v plotID="\$plotID" 'BEGIN {OFS="\\t"} NR>1 && \$1==plotID {print \$3, \$3".bam", \$4}' ${plots_config} > \$safe_coord.tsv
     done
     """
 }
@@ -45,9 +45,11 @@ process sashimi {
     script:
     
     """
+    correct_coord=\$(echo ${configs.simpleName} | sed 's/_/:/g')
+    
     /ggsashimi.py \\
         -b ${configs} \\
-        -c ${configs.simpleName} \\
+        -c \$correct_coord \\
         -g ${ref_gtf} \\
         -P ${palette} \\
         -o sashimi_${configs.simpleName}.pdf \\
