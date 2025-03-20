@@ -45,7 +45,7 @@ process sashimi {
     script:
     
     """
-    correct_coord=\$(echo ${configs.simpleName} | sed 's/_/:/g')
+    correct_coord=\$(echo \$(basename "${configs}" .tsv) | sed 's/\\(.*\\)_\\([^_]*\\)\$/\\1:\\2/')
     
     /ggsashimi.py \\
         -b ${configs} \\
