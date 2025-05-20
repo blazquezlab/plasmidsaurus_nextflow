@@ -10,7 +10,6 @@ include { processCSV; sashimi} from './modules/create_plots'
 sashimi_palette = Channel.value(projectDir + "/assets/palette.txt")
 
 fa = Channel.value(params.ref_fa)
-gtf = Channel.value(params.ref_gtf)
 bed = Channel.value(params.ref_bed)
 
 plots_csv = Channel.fromPath(params.plots_config)
@@ -48,7 +47,7 @@ workflow {
     processCSV(plots_csv) | flatten \
     | set { bams_tsvs }
 
-    sashimi(all_bams, gtf, sashimi_palette, bams_tsvs)
+    sashimi(all_bams, sashimi_palette, bams_tsvs)
 
     // ---- Collect reports ----
     multiqc(
