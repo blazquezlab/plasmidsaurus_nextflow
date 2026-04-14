@@ -34,6 +34,7 @@ process sashimi {
         path bams
         path palette
         path configs
+        path gtf
     
     output:
         path "*.pdf"
@@ -55,7 +56,7 @@ process sashimi {
         --alpha ${params.sashimi_alpha} \\
         --ann-height ${params.sashimi_annot_height} \\
         --width ${params.sashimi_width} \\
-        ${params.sashimi_gtf_annotations ? '-g ${params.ref_gtf}' : ''} \\
+        ${params.sashimi_gtf_annotations ? "-g \"${gtf}\"" : ''} \\
         ${params.sashimi_fix_scale ? '--fix-y-scale' : ''}  \\
         ${params.sashimi_shrink ? '--shrink' : ''} \\
         ${params.sashimi_collapse_groups ? '-C 3' : ''}
