@@ -5,6 +5,7 @@ process processCSV {
     
     output:
         path "*.tsv", emit: sashimi_inputs
+        path "*.txt", emit: palette
     
     when:
         params.get_sashimis == true
@@ -22,6 +23,9 @@ process processCSV {
         safe_coord=\$(echo "\$coord" | sed 's/[:]/_/g')
         awk -F ";" -v plotID="\$plotID" 'BEGIN {OFS="\\t"} NR>1 && \$1==plotID {print \$3, \$3".bam", \$4}' ${plots_config} > \$safe_coord.tsv
     done
+    
+    # generate palette.txt (colors in column 5)
+    awk -F ";" -v plotID="\$plotID" 'NR>1 && \$1==plotID { if (!seen[\$4]++) print \$5}' ${plots_config} > \${safe_coord}_palette.txt
     """
 }
 

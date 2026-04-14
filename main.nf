@@ -7,8 +7,6 @@ include { align } from './modules/alignment'
 include { processCSV; sashimi} from './modules/create_plots'
 
 // ---- Input files ----
-sashimi_palette = Channel.value(projectDir + "/assets/palette.txt")
-
 fa = Channel.value(params.ref_fa)
 bed = Channel.value(params.ref_bed)
 gtf = Channel.fromPath(params.ref_gtf)
@@ -45,8 +43,13 @@ workflow {
     align.out | collect \
     | set { all_bams }
     
-    processCSV(plots_csv) | flatten \
-    | set { bams_tsvs }
+    processCSV(plots_csv)
+
+    processCSV.out.sashimi_inputs.flatten()
+        .set { bams_tsvs }
+
+    processCSV.out.palette.flatten()
+        .set { sashimi_palette }
 
     sashimi(all_bams, sashimi_palette, bams_tsvs, gtf)
 
