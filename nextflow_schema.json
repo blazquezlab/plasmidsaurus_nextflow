@@ -18,7 +18,8 @@
                 },
                 "output_dir": {
                     "type": "string",
-                    "hidden": true,
+                    "format": "directory-path",
+                    "hidden": false,
                     "default": "output-pipeline"
                 },
                 "run_porechop": {
